@@ -1,5 +1,5 @@
 
-# しょぼちゃっと&chi;
+# しょぼちゃっと&Chi;
 
 ## Required
 - Rust nightly compiler
