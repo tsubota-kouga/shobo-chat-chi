@@ -1,0 +1,82 @@
+
+# Server
+[tasks.server-install]
+description = "Install server dependencies"
+script = ['''
+cargo fetch
+''']
+
+[tasks.server-fix]
+description = "Fix server"
+script = [
+'''
+cargo fix -Z unstable-options --clippy
+''']
+
+[tasks.server-lint]
+description = "Lint"
+script = ['''
+cargo clippy --all-targets --all-features -- -D warnings
+''']
+dependencies = ["server-fix"]
+
+[tasks.server-test]
+description = "Test server"
+script = ['''
+cargo test -- --test-threads=1
+''']
+
+[tasks.server-build]
+description = "Build server"
+script = ['''
+cargo build
+''']
+dependencies = ["server-test"]
+
+[tasks.server-clean]
+description = "Clean server"
+script = ['''
+cargo clean
+rm sqlite.db
+''']
+
+# Client
+[tasks.client-install]
+description = "Install client dependencies"
+script = ['''
+cd client && yarn
+''']
+
+[tasks.client-build]
+description = "Build client"
+script = ['''
+cd client && npx gulp
+''']
+
+# General
+[tasks.install]
+description = "Install dependencies"
+dependencies = [
+    "server-install",
+    "client-install"
+    ]
+
+[tasks.build]
+description = "Build all"
+dependencies = [
+    "server-fix",
+    "server-lint",
+    "server-test",
+    "server-build",
+    "client-build"
+    ]
+
+[tasks.run]
+description = "Run server"
+script = ['''
+cargo run
+''']
+dependencies = [
+    "build"
+    ]
+
